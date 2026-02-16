@@ -110,3 +110,11 @@ data/
 mh_toolbox/
 test_debug_output/
 
+# Tutorial sample datasets (keep notebooks/docs, not raw sample files)
+docs/tutorials/events_detection/tmp/
+docs/tutorials/tutorials_OLD_TO_REVIEW/data/
+docs/tutorials/neuromark/**/*.csv
+docs/tutorials/neuromark/**/*.yaml
+docs/tutorials/neuromark/**/*.yml
+docs/tutorials/neuromark/**/*.c3d
+docs/tutorials/neuromark/**/*.xlsx
