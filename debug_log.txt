@@ -1,0 +1,15 @@
+2025-10-23T19:50:36.856912+0200 DEBUG Adding info object.
+2025-10-23T19:50:36.857109+0200 DEBUG Loading object as InfoBase
+2025-10-23T19:50:36.857164+0200 DEBUG Adding events object.
+2025-10-23T19:50:36.857210+0200 INFO Loading file /Users/jorge/BasesDatos/PD/ClubLeones/Gait/eurobench_motion_hub_curated/subject_1/subject_1_cond_1_run_5_point_gaitEvents.yaml
+2025-10-23T19:50:36.859819+0200 DEBUG Loading events object as EventsBase
+2025-10-23T19:50:36.859883+0200 DEBUG Adding data object.
+2025-10-23T19:50:36.859929+0200 INFO Loading file /Users/jorge/BasesDatos/PD/ClubLeones/Gait/eurobench_motion_hub_curated/subject_1/subject_1_cond_1_run_5_jointAngles.csv
+2025-10-23T19:50:36.879869+0200 WARNING There is already a column named 'time' in the data. Using it as a time_key.
+2025-10-23T19:50:38.028163+0200 DEBUG Saved at test_debug_output/subject_1_cond_1_run_5_jointAngles.html
+============================================================
+STARTING PLOT
+============================================================
+============================================================
+PLOT COMPLETE
+============================================================

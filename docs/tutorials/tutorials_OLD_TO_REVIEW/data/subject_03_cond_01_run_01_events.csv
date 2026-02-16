@@ -1,0 +1,24 @@
+﻿Events
+100
+Subject,Context,Name,Time (s),Description
+Subject_03,Left,Foot Strike,2.63,The instant the heel strikes the ground
+Subject_03,Left,Foot Off,3.3,The instant the toe leaves the ground
+Subject_03,Left,Foot Strike,3.77,The instant the heel strikes the ground
+Subject_03,Left,Foot Off,4.44,The instant the toe leaves the ground
+Subject_03,Left,Foot Strike,4.86,The instant the heel strikes the ground
+Subject_03,Left,Foot Off,5.53,The instant the toe leaves the ground
+Subject_03,Left,Foot Strike,6,The instant the heel strikes the ground
+Subject_03,Left,Foot Off,6.68,The instant the toe leaves the ground
+Subject_03,Left,Foot Strike,7.13,The instant the heel strikes the ground
+Subject_03,Left,Foot Off,7.93,The instant the toe leaves the ground
+Subject_03,Right,Foot Strike,2.01,The instant the heel strikes the ground
+Subject_03,Right,Foot Off,2.73,The instant the toe leaves the ground
+Subject_03,Right,Foot Strike,3.2,The instant the heel strikes the ground
+Subject_03,Right,Foot Off,3.87,The instant the toe leaves the ground
+Subject_03,Right,Foot Strike,4.35,The instant the heel strikes the ground
+Subject_03,Right,Foot Off,4.98,The instant the toe leaves the ground
+Subject_03,Right,Foot Strike,5.46,The instant the heel strikes the ground
+Subject_03,Right,Foot Off,6.08,The instant the toe leaves the ground
+Subject_03,Right,Foot Strike,6.58,The instant the heel strikes the ground
+Subject_03,Right,Foot Off,7.27,The instant the toe leaves the ground
+

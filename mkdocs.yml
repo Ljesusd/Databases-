@@ -1,0 +1,93 @@
+site_name: MotionHub
+
+theme:
+  name: "material"
+  features:
+  - announce.dismiss
+  - content.action.edit
+  - content.action.view
+  - content.code.annotate
+  - content.code.copy
+  - content.tooltips
+  - navigation.footer
+  - navigation.indexes
+  - navigation.sections
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.top
+  - search.highlight
+  - search.suggest
+  - toc.follow
+  palette:
+  - media: "(prefers-color-scheme)"
+    toggle:
+      icon: material/brightness-auto
+      name: Switch to light mode
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: teal
+    accent: purple
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: black
+    accent: lime
+    toggle:
+      icon: material/weather-night
+      name: Switch to system preference
+
+markdown_extensions:
+- attr_list
+- admonition
+- footnotes
+- pymdownx.tilde
+- toc:
+    permalink: "¤"
+
+plugins:
+- mkdocs-jupyter
+- mkdocstrings:
+    handlers:
+      python:
+        import:
+        - https://docs.python-requests.org/en/master/objects.inv
+          # paths: [mh_toolbox]
+        options:
+          docstring_options:
+            ignore_init_summary: true
+          docstring_section_style: list
+          filters: ["!^_"]
+          heading_level: 1
+          inherited_members: true
+          merge_init_into_class: true
+          separate_signature: true
+          line_length: 40
+          show_root_heading: true
+          show_root_full_path: false
+          show_signature_annotations: false
+          annotations_path: brief
+          show_symbol_type_heading: true
+          show_symbol_type_toc: true
+          signature_crossrefs: true
+          summary: true
+
+nav:
+  - Home of MotionHub: index.md
+  - Datasets:
+    - Characterization: datasets_characterization.md
+  - Base:
+    - Process Filenames:
+      - API: base/process_filenames.md
+      - Tutorial: tutorials_OLD_TO_REVIEW/base/tutorial_process_filenames.ipynb
+  # - Conversion:
+  #   - conversion/conversion.md
+  #   - Conversion API:
+  #     - conversion/
+  #     - General conversion: conversion/conversion.md
+  #     - Conversion c3d: conversion/conversion_c3d.md
+  # - Characterization: characterization.md
+  # - Exploration: exploration.md
+
+# TODO: https://github.com/danielfrg/mkdocs-jupyter
