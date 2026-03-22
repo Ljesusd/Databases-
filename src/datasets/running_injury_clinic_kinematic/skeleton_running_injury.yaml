@@ -1,0 +1,52 @@
+PelvisCluster:
+  color: [0.4, 1.0, 0.4]
+  links:
+    - [pelvis_1, pelvis_2, pelvis_3, pelvis_4, pelvis_1]
+    - [pelvis_1, pelvis_3]
+    - [pelvis_2, pelvis_4]
+
+LThighCluster:
+  color: [0.2, 0.4, 1.0]
+  links:
+    - [L_thigh_1, L_thigh_2, L_thigh_3, L_thigh_4, L_thigh_1]
+
+LShankCluster:
+  color: [0.0, 0.6, 1.0]
+  links:
+    - [L_shank_1, L_shank_2, L_shank_3, L_shank_4, L_shank_1]
+
+LFootCluster:
+  color: [0.0, 0.8, 0.9]
+  links:
+    - [L_foot_1, L_foot_2, L_foot_3, L_foot_4, L_foot_1]
+
+RThighCluster:
+  color: [1.0, 0.4, 0.2]
+  links:
+    - [R_thigh_1, R_thigh_2, R_thigh_3, R_thigh_4, R_thigh_1]
+
+RShankCluster:
+  color: [1.0, 0.55, 0.0]
+  links:
+    - [R_shank_1, R_shank_2, R_shank_3, R_shank_4, R_shank_1]
+
+RFootCluster:
+  color: [1.0, 0.75, 0.2]
+  links:
+    - [R_foot_1, R_foot_2, R_foot_3, R_foot_4, R_foot_1]
+
+LeftKinematicChain:
+  color: [0.0, 0.95, 0.5]
+  links:
+    - [pelvis_1, L_thigh_1, L_thigh_3, L_shank_2, L_shank_3, L_foot_1, L_foot_3]
+
+RightKinematicChain:
+  color: [1.0, 0.5, 0.15]
+  links:
+    - [pelvis_2, R_thigh_2, R_thigh_3, R_shank_2, R_shank_3, R_foot_1, R_foot_3]
+
+ToeLinks:
+  color: [0.95, 0.95, 0.95]
+  links:
+    - [L_foot_3, L_toe]
+    - [R_foot_3, R_toe]

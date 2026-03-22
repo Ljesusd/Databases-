@@ -93,12 +93,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--processed-root",
-        default="data/138_HealthyPiG/processed",
+        default="data/HealthyPiG/138_HealthyPiG/processed",
         help="Root with subject flexion CSVs",
     )
     parser.add_argument(
         "--out-path",
-        default="data/138_HealthyPiG/test/plots/flattening_subjects_flexion.png",
+        default="data/HealthyPiG/138_HealthyPiG/test/plots/flattening_subjects_flexion.png",
         help="Output plot path",
     )
     parser.add_argument("--top-n", type=int, default=10)

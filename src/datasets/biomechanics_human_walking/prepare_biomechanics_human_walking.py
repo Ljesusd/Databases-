@@ -32,6 +32,10 @@ def _ensure_7z_available() -> None:
 
 
 def _extract_level1(source_root: Path, raw_root: Path) -> Path:
+    extracted_dir = raw_root / "Level 1 - C3D files"
+    if extracted_dir.exists():
+        return extracted_dir
+
     zip_path = source_root / "Level 1 - C3D files.zip"
     if not zip_path.exists():
         raise FileNotFoundError(f"Missing zip: {zip_path}")
@@ -41,7 +45,6 @@ def _extract_level1(source_root: Path, raw_root: Path) -> Path:
     cmd = ["7z", "x", "-y", str(zip_path), f"-o{raw_root}"]
     subprocess.run(cmd, check=True)
 
-    extracted_dir = raw_root / "Level 1 - C3D files"
     if not extracted_dir.exists():
         raise FileNotFoundError(f"Expected extracted folder not found: {extracted_dir}")
     return extracted_dir
@@ -128,12 +131,20 @@ def _column_index(cell_ref: str) -> int:
 def _write_trial_lookup_csvs(source_root: Path, metadata_root: Path) -> tuple[Path, Path]:
     metadata_root.mkdir(parents=True, exist_ok=True)
 
-    xlsx_path = source_root / "trial_look_up.xlsx"
-    if not xlsx_path.exists():
-        raise FileNotFoundError(f"Missing metadata file: {xlsx_path}")
+    metadata_xlsx = metadata_root / "trial_look_up.xlsx"
+    source_xlsx = source_root / "trial_look_up.xlsx"
+    if metadata_xlsx.exists():
+        xlsx_path = metadata_xlsx
+    elif source_xlsx.exists():
+        xlsx_path = source_xlsx
+    else:
+        raise FileNotFoundError(
+            f"Missing metadata file. Checked: {metadata_xlsx} and {source_xlsx}"
+        )
 
     xlsx_copy_path = metadata_root / "trial_look_up.xlsx"
-    shutil.copy2(xlsx_path, xlsx_copy_path)
+    if xlsx_path.resolve() != xlsx_copy_path.resolve():
+        shutil.copy2(xlsx_path, xlsx_copy_path)
 
     records = _read_trial_lookup_xlsx(xlsx_path)
     out_csv = metadata_root / "trial_lookup.csv"

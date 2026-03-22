@@ -90,6 +90,7 @@ def plot_gait_cycle(
     n_trials: int,
     out_path: Path,
     runs: list[str] | None = None,
+    font_scale: float = 1.25,
 ) -> Path:
     subject_dir = eurobench_root / subject
     if not subject_dir.exists():
@@ -106,6 +107,11 @@ def plot_gait_cycle(
         )
 
     selected = trials[:n_trials]
+    title_size = 15.0 * font_scale
+    axis_label_size = 13.0 * font_scale
+    tick_label_size = 11.0 * font_scale
+    legend_size = 10.0 * font_scale
+
     fig, ax = plt.subplots(figsize=(11, 5), constrained_layout=True)
 
     for run, trajectories_path, events_path in selected:
@@ -122,12 +128,17 @@ def plot_gait_cycle(
             ax.scatter([gait_percent[idx]], [signal_cycle[idx]], s=18)
 
     ax.set_title(
-        f"Multimodal walking speeds - gait cycle ({subject}, {condition}, {side}, {marker_column})"
+        f"Multimodal walking speeds - gait cycle ({subject}, {condition}, {side}, {marker_column})",
+        fontsize=title_size,
     )
-    ax.set_xlabel("Gait cycle [%]")
-    ax.set_ylabel(f"{marker_column} [m]")
+    ax.set_xlabel("Gait cycle [%]", fontsize=axis_label_size)
+    ax.set_ylabel("")
+    ax.set_yticks([])
+    ax.set_yticklabels([])
+    ax.tick_params(labelsize=tick_label_size)
+    ax.tick_params(axis="y", which="both", left=False, right=False, labelleft=False)
     ax.grid(alpha=0.3)
-    ax.legend(loc="best")
+    ax.legend(loc="best", fontsize=legend_size)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=180)
@@ -174,6 +185,12 @@ def main() -> None:
         default=None,
         help="Output PNG path.",
     )
+    parser.add_argument(
+        "--font-scale",
+        type=float,
+        default=1.25,
+        help="Scale factor for text size in the output plot.",
+    )
     args = parser.parse_args()
 
     marker_column = args.marker_column
@@ -195,6 +212,7 @@ def main() -> None:
         n_trials=args.n_trials,
         out_path=out_path,
         runs=args.runs,
+        font_scale=args.font_scale,
     )
     print(out)
 

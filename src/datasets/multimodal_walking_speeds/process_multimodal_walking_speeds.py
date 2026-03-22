@@ -31,6 +31,14 @@ sys.path.append(str(REPO_ROOT))
 from mh_toolbox.conversion.c3d.c3d_eurobench import (  # noqa: E402
     convert_dir_c3d_to_eurobench_using_predefined_types,
 )
+try:
+    from src.datasets.marker_standardization import (  # noqa: E402
+        TRAJECTORY_MARKER_STANDARDIZATION,
+    )
+except ModuleNotFoundError:
+    from datasets.marker_standardization import (  # noqa: E402
+        TRAJECTORY_MARKER_STANDARDIZATION,
+    )
 
 
 DYNAMIC_PATTERN = r"(?P<subject>\d+)_(?P<condition>C\d+)_(?P<run>\d+)"
@@ -62,6 +70,7 @@ def _convert_dir(
         info_suffix="info",
         events_suffix="gaitEvents",
         writing_mode=writing_mode,
+        **TRAJECTORY_MARKER_STANDARDIZATION,
     )
 
 

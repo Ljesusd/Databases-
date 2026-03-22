@@ -22,6 +22,10 @@ def _ensure_ezc3d_dylib_or_reexec():
 
 _ensure_ezc3d_dylib_or_reexec()
 sys.path.append(str(Path(__file__).resolve().parents[2]))
+try:
+    from src.datasets.marker_standardization import TRAJECTORY_MARKER_STANDARDIZATION
+except ModuleNotFoundError:
+    from datasets.marker_standardization import TRAJECTORY_MARKER_STANDARDIZATION
 
 
 def _sanitize_basename(stem: str) -> str:
@@ -70,6 +74,7 @@ def process_subject_trial0(
         b_save_events=False,
         b_save_info=False,
         writing_mode="w",
+        **TRAJECTORY_MARKER_STANDARDIZATION,
     )
 
     csv_path = out_eurobench / f"{c3d_file.stem}_Trajectories.csv"
@@ -124,17 +129,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--raw-root",
-        default="data/138_HealthyPiG/raw",
+        default="data/HealthyPiG/138_HealthyPiG/raw",
         help="Root directory with raw subject folders",
     )
     parser.add_argument(
         "--eurobench-root",
-        default="data/138_HealthyPiG/eurobench",
+        default="data/HealthyPiG/138_HealthyPiG/eurobench",
         help="Output directory for Eurobench trajectories/events",
     )
     parser.add_argument(
         "--processed-root",
-        default="data/138_HealthyPiG/processed",
+        default="data/HealthyPiG/138_HealthyPiG/processed",
         help="Output directory for normalized outputs",
     )
     parser.add_argument("--subject", help="Single subject folder name, e.g. SUBJ01")

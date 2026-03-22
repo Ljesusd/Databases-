@@ -201,7 +201,7 @@ def _save_cycles_long_csv(cycles: list[TrialCycle], out_csv: Path) -> None:
     pd.DataFrame(rows).to_csv(out_csv, index=False)
 
 
-def _plot_cycles(cycles: list[TrialCycle], out_png: Path, title: str) -> None:
+def _plot_cycles(cycles: list[TrialCycle], out_png: Path, title: str, font_scale: float = 1.25) -> None:
     pct = cycles[0].pct
     ankle = np.array([c.ankle for c in cycles])
     knee = np.array([c.knee for c in cycles])
@@ -211,34 +211,45 @@ def _plot_cycles(cycles: list[TrialCycle], out_png: Path, title: str) -> None:
     mean_knee = np.nanmean(knee, axis=0)
     mean_hip = np.nanmean(hip, axis=0)
 
-    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True, constrained_layout=True)
+    joint_title_size = 16.0 * font_scale
+    axis_label_size = 14.0 * font_scale
+    tick_label_size = 11.0 * font_scale
+    suptitle_size = 14.0 * font_scale
+
+    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=True, constrained_layout=False)
     fig.patch.set_facecolor("#ebebeb")
 
     for ax in axes:
         ax.set_facecolor("#ebebeb")
         ax.grid(alpha=0.22)
+        ax.tick_params(labelsize=tick_label_size)
+        ax.set_ylabel("")
+        ax.set_yticks([])
+        ax.set_yticklabels([])
+        ax.tick_params(axis="y", which="both", left=False, right=False, labelleft=False)
 
     for curve in ankle:
         axes[0].plot(pct, curve, color="gray", alpha=0.18, linewidth=1.0)
     axes[0].plot(pct, mean_ankle, color="black", linewidth=2.2)
-    axes[0].set_title("ANKLE", fontsize=16, pad=8)
+    axes[0].set_title("ANKLE", fontsize=joint_title_size, pad=8)
 
     for curve in knee:
         axes[1].plot(pct, curve, color="gray", alpha=0.18, linewidth=1.0)
     axes[1].plot(pct, mean_knee, color="black", linewidth=2.2)
-    axes[1].set_title("KNEE", fontsize=16, pad=8)
+    axes[1].set_title("KNEE", fontsize=joint_title_size, pad=8)
 
     for curve in hip:
         axes[2].plot(pct, curve, color="gray", alpha=0.18, linewidth=1.0)
     axes[2].plot(pct, mean_hip, color="black", linewidth=2.2)
-    axes[2].set_title("HIP", fontsize=16, pad=8)
+    axes[2].set_title("HIP", fontsize=joint_title_size, pad=8)
 
-    axes[2].set_xlabel("PERCENT OF GAIT CYCLE (%)", fontsize=14)
+    axes[2].set_xlabel("PERCENT OF GAIT CYCLE (%)", fontsize=axis_label_size)
     axes[2].set_xlim(0.0, 100.0)
-    fig.suptitle(title, fontsize=18, y=1.01)
+    fig.suptitle(title, fontsize=suptitle_size, y=0.995, x=0.5, wrap=True)
+    fig.tight_layout(rect=[0.0, 0.0, 1.0, 0.95])
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out_png, dpi=200)
+    fig.savefig(out_png, dpi=200, bbox_inches="tight", pad_inches=0.12)
     plt.close(fig)
 
 
@@ -278,6 +289,12 @@ def main() -> None:
         default=2,
         help="Vertical axis index in XYZ (default 2 for this dataset).",
     )
+    parser.add_argument(
+        "--font-scale",
+        type=float,
+        default=1.25,
+        help="Scale factor for text size in the output plot.",
+    )
     args = parser.parse_args()
 
     eurobench_root = Path(args.eurobench_root)
@@ -309,12 +326,12 @@ def main() -> None:
             continue
 
         n_subjects = len({c.subject for c in cycles})
-        title = f"multimodal_walking_speeds {condition} Gait (subjects={n_subjects}, n={len(cycles)})"
+        title = f"Multimodal walking speeds {condition} gait\n(subjects={n_subjects}, n={len(cycles)})"
 
         out_png = out_dir / f"gait_cycle_{condition}_ankle_knee_hip.png"
         out_csv = out_dir / f"gait_cycle_{condition}_ankle_knee_hip_long.csv"
         _save_cycles_long_csv(cycles, out_csv)
-        _plot_cycles(cycles, out_png, title=title)
+        _plot_cycles(cycles, out_png, title=title, font_scale=args.font_scale)
 
         print(f"condition,{condition},saved_png,{out_png}")
         print(f"condition,{condition},saved_csv,{out_csv}")

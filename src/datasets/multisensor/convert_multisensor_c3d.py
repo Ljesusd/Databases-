@@ -34,6 +34,12 @@ def _mean_markers(*markers: np.ndarray) -> np.ndarray:
     return np.mean(np.stack(markers, axis=0), axis=0)
 
 
+def _append_marker_xyz(data: dict, marker_name: str, marker_values: np.ndarray) -> None:
+    data[f"{marker_name}_x"] = marker_values[:, 0]
+    data[f"{marker_name}_y"] = marker_values[:, 1]
+    data[f"{marker_name}_z"] = marker_values[:, 2]
+
+
 def convert_c3d_to_marker_csv(c3d_path: Path, out_csv: Path):
     import ezc3d
 
@@ -49,42 +55,95 @@ def convert_c3d_to_marker_csv(c3d_path: Path, out_csv: Path):
     ips_r = _get_marker(points, labels, "ips_R")
     ips_l = _get_marker(points, labels, "ips_L")
     fme_r = _get_marker(points, labels, "fme_R")
+    fme_l = _get_marker(points, labels, "fme_L")
     fle_r = _get_marker(points, labels, "fle_R")
+    fle_l = _get_marker(points, labels, "fle_L")
     tam_r = _get_marker(points, labels, "tam_R")
+    tam_l = _get_marker(points, labels, "tam_L")
     fal_r = _get_marker(points, labels, "fal_R")
+    fal_l = _get_marker(points, labels, "fal_L")
     fm1_r = _get_marker(points, labels, "fm1_R")
+    fm1_l = _get_marker(points, labels, "fm1_L")
     fm5_r = _get_marker(points, labels, "fm5_R")
+    fm5_l = _get_marker(points, labels, "fm5_L")
     heel_r = _get_marker(points, labels, "heel_R")
+    heel_l = _get_marker(points, labels, "heel_L")
+
+    # Additional upper-body and head markers available in all recordings.
+    c7 = _get_marker(points, labels, "c7")
+    clav = _get_marker(points, labels, "clav")
+    shoulder_l = _get_marker(points, labels, "shoulder_L")
+    shoulder_r = _get_marker(points, labels, "shoulder_R")
+    elbow_l = _get_marker(points, labels, "elbow_L")
+    elbow_r = _get_marker(points, labels, "elbow_R")
+    wrist_al = _get_marker(points, labels, "wrist_AL")
+    wrist_bl = _get_marker(points, labels, "wrist_BL")
+    wrist_ar = _get_marker(points, labels, "wrist_AR")
+    wrist_br = _get_marker(points, labels, "wrist_BR")
+    finger_l = _get_marker(points, labels, "finger_L")
+    finger_r = _get_marker(points, labels, "finger_R")
+    head_fl = _get_marker(points, labels, "head_FL")
+    head_fr = _get_marker(points, labels, "head_FR")
+    head_bl = _get_marker(points, labels, "head_BL")
+    head_br = _get_marker(points, labels, "head_BR")
 
     pelvis = _mean_markers(ias_r, ias_l, ips_r, ips_l)
+    lthigh = _mean_markers(ias_l, ips_l)
     rthigh = _mean_markers(ias_r, ips_r)
+    lknee = _mean_markers(fme_l, fle_l)
     rknee = _mean_markers(fme_r, fle_r)
+    lank = _mean_markers(tam_l, fal_l)
     rank = _mean_markers(tam_r, fal_r)
+    ltoe = _mean_markers(fm1_l, fm5_l)
     rtoe = _mean_markers(fm1_r, fm5_r)
+    t10 = _mean_markers(ips_l, ips_r)
 
-    df = pd.DataFrame(
-        {
-            "time": time,
-            "PELV_x": pelvis[:, 0],
-            "PELV_y": pelvis[:, 1],
-            "PELV_z": pelvis[:, 2],
-            "RTHI_x": rthigh[:, 0],
-            "RTHI_y": rthigh[:, 1],
-            "RTHI_z": rthigh[:, 2],
-            "RKNE_x": rknee[:, 0],
-            "RKNE_y": rknee[:, 1],
-            "RKNE_z": rknee[:, 2],
-            "RANK_x": rank[:, 0],
-            "RANK_y": rank[:, 1],
-            "RANK_z": rank[:, 2],
-            "RHEE_x": heel_r[:, 0],
-            "RHEE_y": heel_r[:, 1],
-            "RHEE_z": heel_r[:, 2],
-            "RTOE_x": rtoe[:, 0],
-            "RTOE_y": rtoe[:, 1],
-            "RTOE_z": rtoe[:, 2],
-        }
-    )
+    # Keep the existing canonical lower-limb markers and add a multisensor full-body mapping.
+    data = {"time": time}
+    marker_map = {
+        # Canonical lower-limb landmarks used by current gait/event scripts.
+        "PELV": pelvis,
+        "LTHI": lthigh,
+        "RTHI": rthigh,
+        "LKNE": lknee,
+        "RKNE": rknee,
+        "LANK": lank,
+        "RANK": rank,
+        "LHEE": heel_l,
+        "RHEE": heel_r,
+        "LTOE": ltoe,
+        "RTOE": rtoe,
+        # Pelvis/trunk aliases.
+        "LASI": ias_l,
+        "RASI": ias_r,
+        "LPSI": ips_l,
+        "RPSI": ips_r,
+        "C7": c7,
+        "CLAV": clav,
+        "T10": t10,
+        "STRN": clav,  # Best available approximation in this dataset.
+        # Upper limbs.
+        "LSHO": shoulder_l,
+        "RSHO": shoulder_r,
+        "LELB": elbow_l,
+        "RELB": elbow_r,
+        "LWRA": wrist_al,
+        "LWRB": wrist_bl,
+        "RWRA": wrist_ar,
+        "RWRB": wrist_br,
+        "LFIN": finger_l,
+        "RFIN": finger_r,
+        # Head.
+        "LFHD": head_fl,
+        "RFHD": head_fr,
+        "LBHD": head_bl,
+        "RBHD": head_br,
+    }
+
+    for name, values in marker_map.items():
+        _append_marker_xyz(data, name, values)
+
+    df = pd.DataFrame(data)
 
     out_csv.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out_csv, index=False)

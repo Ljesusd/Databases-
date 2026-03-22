@@ -125,12 +125,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--processed-root",
-        default="data/138_HealthyPiG/processed",
+        default="data/HealthyPiG/138_HealthyPiG/processed",
         help="Root directory with subject-level normalized outputs",
     )
     parser.add_argument(
         "--out-dir",
-        default="data/138_HealthyPiG/processed/outliers_knee",
+        default="data/HealthyPiG/138_HealthyPiG/processed/outliers_knee",
         help="Output directory for outlier reports",
     )
     parser.add_argument("--min-range", type=float, default=5.0)

@@ -27,11 +27,22 @@ def _ensure_ezc3d_dylib_or_reexec():
 _ensure_ezc3d_dylib_or_reexec()
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+SRC_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(REPO_ROOT))
+sys.path.append(str(SRC_ROOT))
 
 from mh_toolbox.conversion.c3d.c3d_eurobench import (
     convert_dir_c3d_to_eurobench_using_predefined_types,
 )
+try:
+    from src.datasets.marker_standardization import (
+        TRAJECTORY_MARKER_STANDARDIZATION,
+    )
+except ModuleNotFoundError:
+    from datasets.marker_standardization import (
+        TRAJECTORY_MARKER_STANDARDIZATION,
+    )
+from detect_gait_events_markers import detect_gait_events_markers
 
 
 def _sanitize_basename(stem: str) -> str:
@@ -274,6 +285,40 @@ def process_subject(
                 continue
         trial_basename = _sanitize_basename(c3d_file.stem)
         try:
+            trajectories_csv = out_eurobench / f"{c3d_file.stem}_Trajectories.csv"
+            info_yaml = out_eurobench / f"{c3d_file.stem}_info.yaml"
+            events_yaml = out_eurobench / f"{c3d_file.stem}_events.yaml"
+            gait_events_yaml = out_eurobench / f"{c3d_file.stem}_gaitEvents.yaml"
+
+            needs_trajectory_export = (
+                not trajectories_csv.exists()
+                or not info_yaml.exists()
+                or not events_yaml.exists()
+            )
+            if needs_trajectory_export:
+                convert_dir_c3d_to_eurobench_using_predefined_types(
+                    dir_in=str(subject_dir),
+                    dir_out=str(out_eurobench),
+                    predefined_types="TRAJECTORY",
+                    list_filter_cols=[],
+                    pattern_c3d=c3d_file.name,
+                    pattern_subject_condition_run=r"(?P<condition>SUBJ)(?P<subject>\d+)\s*\((?P<run>\d+)\)",
+                    group_names=["subject", "condition", "run"],
+                    b_save_data=True,
+                    b_save_analogs=False,
+                    b_save_events=True,
+                    b_save_info=True,
+                    writing_mode="w",
+                    **TRAJECTORY_MARKER_STANDARDIZATION,
+                )
+            if trajectories_csv.exists() and not gait_events_yaml.exists():
+                detect_gait_events_markers(
+                    str(trajectories_csv),
+                    out_yaml=str(gait_events_yaml),
+                    axis_mode="vertical",
+                    axis_override="z",
+                )
+
             angles_csv = out_eurobench / f"{c3d_file.stem}_jointAngles.csv"
             if not angles_csv.exists():
                 convert_dir_c3d_to_eurobench_using_predefined_types(
@@ -453,17 +498,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--raw-root",
-        default="data/138_HealthyPiG/raw",
+        default="data/HealthyPiG/138_HealthyPiG/raw",
         help="Root directory with raw subject folders",
     )
     parser.add_argument(
         "--test-root",
-        default="data/138_HealthyPiG/test",
+        default="data/HealthyPiG/138_HealthyPiG/test",
         help="Root directory for test outputs",
     )
     parser.add_argument(
         "--canonical-npz",
-        default="data/138_HealthyPiG/processed/population_angles_norm101.npz",
+        default="data/HealthyPiG/138_HealthyPiG/processed/population_angles_norm101.npz",
         help="Canonical population angles NPZ (knee_mean used).",
     )
     parser.add_argument("--subject", default="SUBJ138", help="Subject ID, e.g. SUBJ138")

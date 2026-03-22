@@ -39,8 +39,8 @@ def plot_fusion_knee(csv_path: str, out_path: str, joint: str = "knee"):
 
 def main():
     plot_fusion_knee(
-        csv_path="data/138_HealthyPiG/processed/fusion_SUBJ01_04_flexion_norm101.csv",
-        out_path="data/138_HealthyPiG/processed/fusion_SUBJ01_04_knee.png",
+        csv_path="data/HealthyPiG/138_HealthyPiG/processed/fusion_SUBJ01_04_flexion_norm101.csv",
+        out_path="data/HealthyPiG/138_HealthyPiG/processed/fusion_SUBJ01_04_knee.png",
         joint="knee",
     )
 

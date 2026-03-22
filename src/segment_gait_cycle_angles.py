@@ -211,11 +211,11 @@ def save_flexion_outputs(out_dir, basename, pct, data):
 
 
 def main():
-    csv_path = "data/138_HealthyPiG/eurobench/SUBJ01/SUBJ1 (0)_jointAngles.csv"
-    events_yaml = "data/138_HealthyPiG/eurobench/SUBJ01/SUBJ1 (0)_gaitEvents.yaml"
+    csv_path = "data/HealthyPiG/138_HealthyPiG/eurobench/SUBJ01/SUBJ1 (0)_jointAngles.csv"
+    events_yaml = "data/HealthyPiG/138_HealthyPiG/eurobench/SUBJ01/SUBJ1 (0)_gaitEvents.yaml"
     pct, data_norm = segment_and_normalize_angles(csv_path, events_yaml)
     save_normalized_angles(
-        out_dir="data/138_HealthyPiG/processed/SUBJ01",
+        out_dir="data/HealthyPiG/138_HealthyPiG/processed/SUBJ01",
         basename="SUBJ1_0",
         pct=pct,
         data=data_norm,

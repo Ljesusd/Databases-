@@ -28,6 +28,14 @@ sys.path.append(str(REPO_ROOT))
 from mh_toolbox.conversion.c3d.c3d_eurobench import (
     convert_dir_c3d_to_eurobench_using_predefined_types,
 )
+try:
+    from src.datasets.marker_standardization import (  # noqa: E402
+        TRAJECTORY_MARKER_STANDARDIZATION,
+    )
+except ModuleNotFoundError:
+    from datasets.marker_standardization import (  # noqa: E402
+        TRAJECTORY_MARKER_STANDARDIZATION,
+    )
 
 
 # Filenames look like P01_S01_2minWalk_01.c3d.
@@ -63,6 +71,7 @@ def convert_subject(raw_root: Path, eurobench_root: Path, subject_dir: Path, pat
         info_suffix="info",
         events_suffix="gaitEvents",
         writing_mode="w",
+        **TRAJECTORY_MARKER_STANDARDIZATION,
     )
 
     return {"subject": subject_dir.name, "status": "ok", "n_c3d": len(c3d_files)}

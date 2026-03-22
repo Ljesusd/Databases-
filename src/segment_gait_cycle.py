@@ -139,7 +139,7 @@ def main():
     events_yaml = "data/_test_eurobench/SUBJ1 (0)_gaitEvents.yaml"
     time_norm, data_norm = segment_and_normalize(csv_path, events_yaml)
     save_normalized_outputs(
-        out_dir="data/138_HealthyPiG/processed/SUBJ01",
+        out_dir="data/HealthyPiG/138_HealthyPiG/processed/SUBJ01",
         basename="SUBJ1_0",
         pct=time_norm,
         data=data_norm,
